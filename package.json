@@ -7,14 +7,21 @@
     "run-docker": "docker-compose up -d --build"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/bun": "latest",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/pg": "^8.11.8"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@fastify/jwt": "^8.0.1",
+    "bcryptjs": "^2.4.3",
     "fastify": "^4.28.1",
+    "fastify-plugin": "^4.5.1",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0"
   }
 }

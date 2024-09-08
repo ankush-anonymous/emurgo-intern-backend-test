@@ -1,38 +1,67 @@
 import Fastify from 'fastify';
 import { Pool } from 'pg';
 import { randomUUID } from 'crypto';
+import { jwtPlugin, jwtAuth } from './plugins/jwtPlugin';  // Use custom plugin
 
+// Initialize Fastify instance
 const fastify = Fastify({ logger: true });
 
+// Register the JWT plugin using the custom plugin
+fastify.register(jwtPlugin);
+
+// Import user routes
+import userRoutes from "./routes/usersRoutes";
+import bookRoutes from "./routes/booksRoutes";
+
+// Register routes
+fastify.register(userRoutes, { prefix: "/api/v1" });
+fastify.register(bookRoutes, { prefix: "/api/v1" });
+
+// Sample root route
 fastify.get('/', async (request, reply) => {
   return { hello: 'world' };
 });
 
+// PostgreSQL operations (unchanged)
 async function testPostgres(pool: Pool) {
-  const id = randomUUID();
-  const name = 'Satoshi';
-  const email = 'Nakamoto';
-
-  await pool.query(`DELETE FROM users;`);
+  const userId = randomUUID();
+  const username = 'Satoshi';
+  const password = 'Nakamoto';
 
   await pool.query(`
-    INSERT INTO users (id, name, email)
+    INSERT INTO users (id, username, password)
     VALUES ($1, $2, $3);
-  `, [id, name, email]);
+  `, [userId, username, password]);
 
-  const { rows } = await pool.query(`
-    SELECT * FROM users;
-  `);
+  const bookId = randomUUID();
+  const bookName = 'Blockchain Revolution';
 
-  console.log('USERS', rows);
+  await pool.query(`
+    INSERT INTO books (id, bookName, userId)
+    VALUES ($1, $2, $3);
+  `, [bookId, bookName, userId]);
+
+  const { rows: userRows } = await pool.query(`SELECT * FROM users;`);
+  console.log('USERS:', userRows);
+
+  const { rows: bookRows } = await pool.query(`SELECT * FROM books;`);
+  console.log('BOOKS:', bookRows);
 }
 
 async function createTables(pool: Pool) {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      username TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS books (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      bookName TEXT NOT NULL,
+      userId UUID REFERENCES users(id) ON DELETE CASCADE
     );
   `);
 }
@@ -49,16 +78,13 @@ async function bootstrap() {
   });
 
   await createTables(pool);
-  await testPostgres(pool);
+  // await testPostgres(pool);
 }
 
 try {
   await bootstrap();
-  await fastify.listen({
-    port: 3000,
-    host: '0.0.0.0'
-  })
+  await fastify.listen({ port: 3000, host: '0.0.0.0' });
 } catch (err) {
-  fastify.log.error(err)
-  process.exit(1)
-};
+  fastify.log.error(err);
+  process.exit(1);
+}
