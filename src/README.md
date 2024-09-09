@@ -37,6 +37,9 @@ This project involves creating an API to manage a list of books for users. The A
        "token": "jwt-token"
      }
      ```
+   - **ScreenShot:**
+      ![image](https://github.com/user-attachments/assets/4e996f16-3f3b-46e0-9b99-7ec511da9f4b)
+
 
 ### Book Management
 
@@ -51,6 +54,11 @@ This project involves creating an API to manage a list of books for users. The A
      ```
    - **Headers:**
      - `Authorization: Bearer <token>`
+   - **ScreenShot:**
+     ![image](https://github.com/user-attachments/assets/a0840604-aa8b-4510-97f6-3875ed089a2f)
+     ![image](https://github.com/user-attachments/assets/12970b4d-daaf-4729-9454-93d41f9bc5ce)
+
+
 
 4. **Attach a Book to a User (POST /users/:userId/books/:bookId)**
 
@@ -60,13 +68,20 @@ This project involves creating an API to manage a list of books for users. The A
      - `bookId`: ID of the book.
    - **Headers:**
      - `Authorization: Bearer <token>`
+   - **ScreenShot:**
+     ![image](https://github.com/user-attachments/assets/9e4ebe32-3f13-4c16-a2b2-9272a2e4d7ad)
+
 
 5. **Get All Books (GET /books)**
 
    - **Description:** Retrieve a list of all books.
+   - ![image](https://github.com/user-attachments/assets/497f2a05-3f6d-4450-9285-ba030bc2869e)
+
 
 6. **Get Book by ID (GET /books/:bookId)**
    - **Description:** Retrieve details of a specific book by ID.
+   - ![image](https://github.com/user-attachments/assets/9a96db8c-5026-4299-a884-9cbf66db17c5)
+
 
 ## Testing
 
